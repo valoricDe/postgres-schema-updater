@@ -1,0 +1,19 @@
+{
+  "name": "politbase-schema",
+  "version": "0.0.1",
+  "description": "the schema changes for the politbase platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sql"
+  ],
+  "author": "dev@valoric.de",
+  "license": "ISC",
+  "devDependencies": {
+    "concat-files": "^0.1.1",
+    "glob": "^7.1.1",
+    "simple-git": "^1.66.0"
+  }
+}
