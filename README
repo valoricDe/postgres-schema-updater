@@ -1,0 +1,14 @@
+### How to use
+
+```
+cd  example
+node ../bin/stage.js -v -c "postgres://postgres@localhost:5432/YOUR_DB"
+```
+
+and
+
+```
+node ../bin/commit.js -v
+```
+
+You will be asked before anything is performed on the database.
