@@ -19,7 +19,7 @@ const pgp = require('pg-promise')({
 	promiseLib: Promise
 });
 const readline = require('readline');
-const simpleGit = require('simple-git');
+//const simpleGit = require('simple-git');
 const program = require('commander');
 
 // commander: [label] = optional value saved in program.label, <label2> = required value saved in program.label2
@@ -28,22 +28,20 @@ program
 	.option('-v, --verbose', 'print verbose information')
 	.option('-a, --amend', 'git: amend commit')
 	.option('-m, --message [message]', 'git commit message')
-	.option('-p, --postgres [connection]', 'connection string for postgres instance')
+	.option('-c, --connection [connection]', 'connection string for postgres instance')
 	.option('-s, --source [sourceFile]', 'source sql files (glob syntax allowed)', 'staging.sql')
-	.option('-c, --destination [destinationFile]', 'file used to compare newest changes to', 'production.sql')
+	.option('-d, --destination [destinationFile]', 'file used to compare newest changes to', 'production.sql')
 	.option('--updiff [upgradeDiffFile]', 'file where the upgrade diff is saved', 'upgrade.diff.sql')
 	.option('--downdiff [downgradeDiffFile]', 'file where the downgrade diff is saved', 'downgrade.diff.sql')
 	.parse(process.argv);
 
-
-const apgDiffPath = path.join('vendor', 'apgdiff-2.4', 'apgdiff-2.4.jar');
-const upParameter = '--ignore-start-with --add-transaction ' + program.compareFile + ' ' + program.sourceFile + ' | tee ' + program.upgradeDiffFile;
-const downParameter = '--ignore-start-with --add-transaction ' + program.sourceFile + ' ' + program.compareFile + ' | tee ' + program.downgradeDiffFile;
-
-function promiseFromChildProcess(child) {
+function promiseFromChildProcess(command) {
 	return new Promise(function (resolve, reject) {
-		child.addListener("error", reject);
-		child.addListener("exit", resolve);
+		exec(command, function (err, stdout, stderr) {
+			if(err) reject(err);
+			if(stderr) reject(stderr);
+			resolve(stdout);
+		});
 	});
 }
 
@@ -59,57 +57,23 @@ function promiseFromParamOrQuestion(param, question) {
 				rl.close();
 			});
 		}
-		resolve(param);
+		else {
+			resolve(param);
+		}
 	})
 }
 
-const commandPromises = ['java -jar ' + apgDiffPath + ' ' + upParameter, 'java -jar ' + apgDiffPath + ' ' + downParameter]
-	.map(command => {
-		const child = exec(command);
+const apgDiffPath = path.join(__dirname, '..', 'vendor', 'apgdiff-2.4', 'apgdiff-2.4.jar');
+const downParameter = '--ignore-start-with --add-transaction ' + program.source + ' ' + program.destination + ' | tee ' + program.downdiff;
+const upParameter = '--ignore-start-with --add-transaction ' + program.destination + ' ' + program.source + ' | tee ' + program.updiff;
 
-		child.stdout.on('data', function (data) {
-			console.log('stdout: ' + data);
-		});
-		child.stderr.on('data', function (data) {
-			console.log('stderr: ' + data);
-		});
-		child.on('close', function (code) {
-			console.log('closing code: ' + code);
-		});
-
-		return promiseFromChildProcess(child);
-	});
-/*
- const upDiffChild = exec('java -jar '+apgDiffPath+' '+upParameter);
- const upDiffPromise = promiseFromChildProcess(upDiffChild);
-
- upDiffChild.stdout.on('data', function (data) {
- console.log('stdout: ' + data);
- });
- upDiffChild.stderr.on('data', function (data) {
- console.log('stderr: ' + data);
- });
- upDiffChild.on('close', function (code) {
- console.log('closing code: ' + code);
- });
-
- const downDiffChild = exec('java -jar '+apgDiffPath+' '+upParameter);
- const downDiffPromise = promiseFromChildProcess(downDiffChild);
-
- downDiffChild.stdout.on('data', function (data) {
- console.log('stdout: ' + data);
- });
- downDiffChild.stderr.on('data', function (data) {
- console.log('stderr: ' + data);
- });
- downDiffChild.on('close', function (code) {
- console.log('closing code: ' + code);
- });*/
+const commandPromises = ['java -jar ' + apgDiffPath + ' ' + downParameter, 'java -jar ' + apgDiffPath + ' ' + upParameter]
+	.map(command => promiseFromChildProcess(command));
 
 Promise
 	.all(commandPromises)
 	.then(results => {
-		console.log('results', results);
+		program.verbose && console.log('downdiff: ', results[0], 'updiff: ', results[1]);
 		return results;
 	})
 	.then(results => promiseFromParamOrQuestion(program.connection, 'Enter postgres connection string if you want to execute down and up diff: ')
@@ -127,10 +91,10 @@ Promise
 		})
 	)
 	.then(() => {
-		console.log('Copying ' + program.sourceFile + ' to ' + program.destinationFile);
-		return fs.createReadStream(program.sourceFile).pipe(fs.createWriteStream(program.destinationFile));
+		console.log('Copying ' + program.source + ' to ' + program.destination);
+		return fs.createReadStream(program.source).pipe(fs.createWriteStream(program.destination));
 	})
-	.then(() => promiseFromParamOrQuestion(program.message, 'Enter a git commit message if you want to save your changes: ')
+	/*.then(() => promiseFromParamOrQuestion(program.message, 'Enter a git commit message if you want to save your changes: ')
 		.then((message) => {
 				const gitRepo = simpleGit('.');
 				gitRepo.outputHandler(function (command, stdout, stderr) {
@@ -138,8 +102,7 @@ Promise
 					stderr.pipe(process.stderr);
 				});
 
-				gitRepo.add('.').commit(message, program.amend ? {'-a': null} : {});
-			}
-		)
-	)
+				return gitRepo.commit(message, program.amend ? {'--amend': null, '-a': null} : {'-a': null});
+			})
+	)*/
 	.catch(console.error);
