@@ -29,10 +29,10 @@ program
 	.option('-a, --amend', 'git: amend commit')
 	.option('-m, --message [message]', 'git commit message')
 	.option('-c, --connection [connection]', 'connection string for postgres instance')
-	.option('-s, --source [sourceFile]', 'source sql files (glob syntax allowed)', 'staging.sql')
-	.option('-d, --destination [destinationFile]', 'file used to compare newest changes to', 'production.sql')
-	.option('--updiff [upgradeDiffFile]', 'file where the upgrade diff is saved', 'upgrade.diff.sql')
-	.option('--downdiff [downgradeDiffFile]', 'file where the downgrade diff is saved', 'downgrade.diff.sql')
+	.option('-s, --source [sourceFile]', 'source sql files (glob syntax allowed)', 'sql/staging.sql')
+	.option('-d, --destination [destinationFile]', 'file used to compare newest changes to', 'sql/production.sql')
+	.option('--updiff [upgradeDiffFile]', 'file where the upgrade diff is saved', 'sql/upgrade.diff.sql')
+	.option('--downdiff [downgradeDiffFile]', 'file where the downgrade diff is saved', 'sql/downgrade.diff.sql')
 	.parse(process.argv);
 
 function promiseFromChildProcess(command) {

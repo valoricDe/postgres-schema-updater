@@ -28,11 +28,11 @@ program
 	.option('-v, --verbose', 'print verbose information')
 	.option('-y, --dry', 'do not update database')
 	.option('-c, --connection [connectionString]', 'connectionString for postgres instance') // 'postgres://admin:test1234@localhost:5432/velten'
-	.option('-s, --source [source]', 'source sql files (glob syntax allowed)', 'src/**/*sql')
-	.option('-t, --tmp [tmpFile]', 'file used to save concatenated source files', 'development.sql')
-	.option('-f, --compare [compareFile]', 'file used to compare newest changes to', 'staging.sql')
+	.option('-s, --source [source]', 'source sql files (glob syntax allowed)', 'sql/src/**/*sql')
+	.option('-t, --tmp [tmpFile]', 'file used to save concatenated source files', 'sql/development.sql')
+	.option('-f, --compare [compareFile]', 'file used to compare newest changes to', 'sql/staging.sql')
 	.option('-o, --output [outputFile]', 'file where newest changes are going to be written to', program.compare)
-	.option('-d, --diff [upgradeDiffFile]', 'file where the diff to the compareFile is saved', 'upgrade-staging.diff.sql')
+	.option('-d, --diff [upgradeDiffFile]', 'file where the diff to the compareFile is saved', 'sql/upgrade-staging.diff.sql')
 	.parse(process.argv);
 
 

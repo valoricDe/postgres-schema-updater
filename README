@@ -5,6 +5,12 @@ cd  example
 node ../bin/stage.js -v -c "postgres://postgres@localhost:5432/YOUR_DB"
 ```
 
+or add "my-stage": "stage" to your scripts section of the package.json file and call stage like:
+
+```
+npm run my-stage -- -v -c "postgres://postgres@localhost:5432/YOUR_DB
+```
+
 and
 
 ```
