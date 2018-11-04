@@ -1,11 +1,10 @@
 {
   "name": "postgres-schema-updater",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "schema updater for postgres",
-  "main": "bin/stage.js",
+  "main": "bin/stage.ts",
   "bin": {
-    "stage": "bin/stage.js",
-    "commit": "bin/commit.js"
+    "stage": "build/bin/stage.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,10 +14,16 @@
   ],
   "author": "dev@valoric.de",
   "license": "ISC",
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/node": "^10.12.2",
+    "babel-core": "^6.26.3",
+    "typescript": "^3.1.6"
+  },
   "dependencies": {
+    "chokidar": "latest",
     "commander": "^2.9.0",
     "concat-files": "^0.1.1",
+    "dotenv": "^6.1.0",
     "glob": "^7.1.1",
     "pg-promise": "^5.6.3",
     "readline": "^1.3.0",

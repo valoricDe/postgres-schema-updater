@@ -1,5 +1,15 @@
 ### How to use
 
+you can configure parameters with a .env file or via env variable.
+
+The .env file could have contents like:
+```
+CONNECTION_STRING=postgres://admin:1234@localhost:5432/apidb
+SOURCE=sql/src/**/*sql
+TMP_FILE=sql/development.sql
+COMPARE_FILE=sql/staging.sql
+```
+
 ```
 cd  example
 node ../bin/stage.js -v -c "postgres://postgres@localhost:5432/YOUR_DB"
@@ -9,12 +19,6 @@ or add "my-stage": "stage" to your scripts section of the package.json file and 
 
 ```
 npm run my-stage -- -v -c "postgres://postgres@localhost:5432/YOUR_DB
-```
-
-and
-
-```
-node ../bin/commit.js -v
 ```
 
 You will be asked before anything is performed on the database.

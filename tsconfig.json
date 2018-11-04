@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "target": "es2017",
+    "jsx": "preserve",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "build",
+    "pretty": true,
+    "lib": ["es2017"],
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "noEmit": false,
+    "experimentalDecorators": true,
+    "noErrorTruncation": true,
+    "noUnusedLocals": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "emitDecoratorMetadata": true
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "**/node_modules/*"
+  ]
+}
