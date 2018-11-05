@@ -33,7 +33,7 @@ const log = {
   always: console.log.bind(console),
   verbose: (...args) => {
     if (program.verbose) {
-      console.log(args)
+      console.log(...args)
     }
   },
 }

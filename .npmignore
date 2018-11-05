@@ -1,6 +1,6 @@
-.idea
-/bin
+/.idea
 /example
+/bin
 /lib
-.babelrc
-tsconfig.json
+/.babelrc
+/tsconfig.json
