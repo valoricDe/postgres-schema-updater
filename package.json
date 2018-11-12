@@ -1,6 +1,6 @@
 {
   "name": "postgres-schema-updater",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "schema updater for postgres",
   "main": "bin/stage.ts",
   "bin": {
@@ -24,8 +24,8 @@
     "commander": "^2.9.0",
     "concat-files": "^0.1.1",
     "dotenv": "^6.1.0",
-    "glob": "^7.1.1",
-    "pg-promise": "^5.6.3",
+    "glob": "^7.1.3",
+    "pg-promise": "^8.5.2",
     "readline": "^1.3.0",
     "simple-git": "^1.66.0"
   }
